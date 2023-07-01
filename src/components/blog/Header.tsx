@@ -42,7 +42,9 @@ export function Header() {
 
       <div className="flex gap-4">
         <button>Login</button>
-        <button>SignUp</button>
+        <Link href="/signup">
+          <button>SignUp</button>
+        </Link>
       </div>
     </>
   );
