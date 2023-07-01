@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { FormInput } from "@/components/signup";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -87,7 +88,7 @@ export default function SignUp() {
           />
         </div>
 
-        <form className="ml-24" onSubmit={handleSubmit(createUser)}>
+        <form className="ml-24 flex flex-col" onSubmit={handleSubmit(createUser)}>
           <h1 className="text-5xl mt-36 mb-6 font-bold">
             Sign in or create an account
           </h1>
@@ -111,7 +112,7 @@ export default function SignUp() {
           >
             CREATE ACCOUNT
           </button>
-          {/* <span>Already has an account? Sign in</span> */}
+          <p className="mt-3 text-zinc-500">Already has an account? <Link href={"/login"} className="text-teal-600 font-bold">Sign in.</Link></p>
         </form>
       </main>
     </>
