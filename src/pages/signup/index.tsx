@@ -104,6 +104,10 @@ export default function SignUp() {
                 />
               );
             })}
+            <div>
+              <label>Your profile picture: </label>
+              <input type="file" />
+            </div>
           </div>
           <button
             type="submit"
@@ -112,7 +116,7 @@ export default function SignUp() {
           >
             CREATE ACCOUNT
           </button>
-          <p className="mt-3 text-zinc-500">Already has an account? <Link href={"/login"} className="text-teal-600 font-bold">Sign in.</Link></p>
+          <p className="mt-3 text-zinc-500">Already has an account? <Link href={"/login"} className="text-teal-500 font-bold">Sign in.</Link></p>
         </form>
       </main>
     </>
