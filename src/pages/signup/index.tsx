@@ -4,6 +4,7 @@ import { FormInput } from "@/components/signup";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import useCreateAuthor from "@/hooks/useCreateAuthor";
 
 export default function SignUp() {
   const userFormSchema = z
@@ -53,9 +54,13 @@ export default function SignUp() {
     register,
     handleSubmit,
   } = useForm<userFormSchema>({ resolver: zodResolver(userFormSchema) });
+  
+  const { createAuthor } = useCreateAuthor()
 
-  function createUser(userFormData: userFormSchema) {
-    console.log(userFormData);
+  async function createUser(userFormData: userFormSchema) {
+    const { confirmPassword, ...userData } = userFormData
+
+    await createAuthor({ variables: { type: userData } })
   }
 
   type InputProps = {
@@ -83,6 +88,8 @@ export default function SignUp() {
           <Image
             src="https://d2c1zgxlx4smmz.cloudfront.net/faxina-blog-signup-image.jpg"
             fill={true}
+            priority={true}
+            sizes="(max-width: 768px) 100vw"
             style={{ objectFit: "cover" }}
             alt="Picture of a robotic hand"
           />
@@ -104,10 +111,6 @@ export default function SignUp() {
                 />
               );
             })}
-            <div>
-              <label>Your profile picture: </label>
-              <input type="file" />
-            </div>
           </div>
           <button
             type="submit"
