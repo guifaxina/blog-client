@@ -1,17 +1,19 @@
 import { UseFormRegisterReturn } from "react-hook-form"
+import { Input } from "@/components/ui/input"
 
 type Props = {
   type: string
   placeholder: string
   register: UseFormRegisterReturn
   errors?: string
+  className?: string
 }
 
-export function FormInput({ type, placeholder, register, errors }: Props) {
+export function FormInput({ type, placeholder, register, errors, className }: Props) {
   return (
     <>
-      <input
-        className="outline outline-zinc-500 outline-1 px-4 h-10 text-sm w-5/6 bg-zinc-50 focus:outline-zinc-950 focus:outline-2"
+      <Input
+        className={className ?? "bg-slate-950 w-1/2 focus-visible:outline-none"}
         type={type}
         placeholder={placeholder}
         {...register}
