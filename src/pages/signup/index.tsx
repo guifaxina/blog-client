@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useCreateAuthor from "@/hooks/useCreateAuthor";
+import { Button } from "@/components/ui/button";
 
 export default function SignUp() {
   const userFormSchema = z
@@ -54,13 +55,13 @@ export default function SignUp() {
     register,
     handleSubmit,
   } = useForm<userFormSchema>({ resolver: zodResolver(userFormSchema) });
-  
-  const { createAuthor } = useCreateAuthor()
+
+  const { createAuthor } = useCreateAuthor();
 
   async function createUser(userFormData: userFormSchema) {
-    const { confirmPassword, ...userData } = userFormData
+    const { confirmPassword, ...userData } = userFormData;
 
-    await createAuthor({ variables: { type: userData } })
+    await createAuthor({ variables: { type: userData } });
   }
 
   type InputProps = {
@@ -83,44 +84,64 @@ export default function SignUp() {
 
   return (
     <>
-      <main className="bg-zinc-50 w-screen h-screen flex flex-row">
+      <main className="bg-slate-950 w-screen h-screen flex flex-row">
         <div className="w-5/12 h-screen relative">
           <Image
             src="https://d2c1zgxlx4smmz.cloudfront.net/faxina-blog-signup-image.jpg"
             fill={true}
             priority={true}
-            sizes="(max-width: 768px) 100vw"
+            sizes=""
             style={{ objectFit: "cover" }}
             alt="Picture of a robotic hand"
           />
         </div>
 
-        <form className="ml-24 flex flex-col" onSubmit={handleSubmit(createUser)}>
-          <h1 className="text-5xl mt-36 mb-6 font-bold">
-            Sign in or create an account
-          </h1>
-          <div className="flex flex-col gap-3">
-            {inputs.map(({ type, placeholder, name }) => {
-              return (
-                <FormInput
-                  key={name}
-                  type={type}
-                  placeholder={placeholder}
-                  register={register(name)}
-                  errors={errors[name]?.message}
-                />
-              );
-            })}
-          </div>
-          <button
-            type="submit"
-            className="text-white bg-zinc-800 p-3 font-bold mt-3 w-5/6 
-            hover:bg-zinc-950 hover:shadow-lg transition duration-200"
+        <div className="flex w-7/12">
+          <form
+            className="flex flex-col w-full items-center justify-center text-white"
+            onSubmit={handleSubmit(createUser)}
           >
-            CREATE ACCOUNT
-          </button>
-          <p className="mt-3 text-zinc-500">Already has an account? <Link href={"/login"} className="text-teal-500 font-bold">Sign in.</Link></p>
-        </form>
+            <h1 className="text-3xl font-semibold text-zinc-50">
+              Create an account
+            </h1>
+            <p className="text-slate-500 mb-3">Enter your information below to create your account</p>
+            <div className="flex flex-col gap-3 w-full items-center justify-center">
+              <div className="flex flex-row gap-3 w-1/2">
+                {inputs.map(({ type, placeholder, name }, index) => {
+                  return index < 2 ? (
+                    <FormInput
+                      key={name}
+                      type={type}
+                      placeholder={placeholder}
+                      register={register(name)}
+                      errors={errors[name]?.message}
+                    />
+                  ) : null;
+                })}
+              </div>
+              {inputs.map(({ type, placeholder, name }, index) => {
+                return index > 1 ? (
+                  <FormInput
+                    key={name}
+                    type={type}
+                    placeholder={placeholder}
+                    register={register(name)}
+                    errors={errors[name]?.message}
+                  />
+                ) : null;
+              })}
+            </div>
+            <Button className="mt-3 w-1/2" variant="secondary" type="submit">
+              CREATE ACCOUNT
+            </Button>
+            <p className="mt-3 text-slate-500">
+              Already has an account?{" "}
+              <Link href={"/login"} className="text-slate-200 font-medium hover:underline">
+                Sign in.
+              </Link>
+            </p>
+          </form>
+        </div>
       </main>
     </>
   );
