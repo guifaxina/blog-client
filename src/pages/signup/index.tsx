@@ -1,14 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FieldErrors, FieldValues, useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useCreateAuthor from "@/hooks/useCreateAuthor";
 import { Button } from "@/components/ui/button";
-import PasswordInputField from "@/components/signup/PasswordInputField";
+import { PasswordInputField } from "@/components/signup/";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import ButtonLoading from "@/components/signup/ButtonLoading";
 
 export default function SignUp() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const userFormSchema = z
     .object({
       name: z
@@ -40,9 +44,7 @@ export default function SignUp() {
           "The password should contain at least 8 characters, a number, a special character and an uppercase letter."
         ),
 
-      confirmPassword: z
-        .string()
-        .nonempty("Please confirm your password."),
+      confirmPassword: z.string().nonempty("Please confirm your password."),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: "Passwords do not match.",
@@ -57,12 +59,14 @@ export default function SignUp() {
     handleSubmit,
   } = useForm<userFormSchema>({ resolver: zodResolver(userFormSchema) });
 
-  const { createAuthor } = useCreateAuthor();
+  const { createAuthor, loading } = useCreateAuthor();
 
   async function createUser(userFormData: userFormSchema) {
     const { confirmPassword, ...userData } = userFormData;
 
+    setIsLoading(true);
     await createAuthor({ variables: { type: userData } });
+    setIsLoading(loading);
   }
 
   type TPasswordInputFields = {
@@ -75,7 +79,7 @@ export default function SignUp() {
     { name: "confirmPassword", placeholder: "Confirm your password" },
   ];
 
-  const formFields: FieldValues = Object.keys(errors)
+  const formFields: FieldValues = Object.keys(errors);
 
   return (
     <>
@@ -104,21 +108,21 @@ export default function SignUp() {
             </p>
             <div className="flex flex-col gap-3 w-1/2 items-center justify-center">
               <div className="flex flex-row gap-3 w-full">
-                  {errors.name?.message ? (
-                    <Input
-                      className="bg-slate-950 outline outline-red-500 outline-1 focus-visible:outline-red-500"
-                      placeholder="Name"
-                      {...register("name")}
-                      type="text"
-                    />
-                  ) : (
-                    <Input
-                      className="bg-slate-950 focus-visible:outline-none"
-                      placeholder="Name"
-                      {...register("name")}
-                      type="text"
-                    />
-                  )}
+                {errors.name?.message ? (
+                  <Input
+                    className="bg-slate-950 outline outline-red-500 outline-1 focus-visible:outline-red-500"
+                    placeholder="Name"
+                    {...register("name")}
+                    type="text"
+                  />
+                ) : (
+                  <Input
+                    className="bg-slate-950 focus-visible:outline-none"
+                    placeholder="Name"
+                    {...register("name")}
+                    type="text"
+                  />
+                )}
                 {errors.lastName?.message ? (
                   <Input
                     className="bg-slate-950 outline outline-red-500 outline-1 focus-visible:outline-red-500"
@@ -135,7 +139,7 @@ export default function SignUp() {
                   />
                 )}
               </div>
-             
+
               {errors.email?.message ? (
                 <Input
                   className="bg-slate-950 outline outline-red-500 outline-1 focus-visible:outline-red-500"
@@ -168,17 +172,33 @@ export default function SignUp() {
               </div>
               <div className="flex flex-col justify-start w-full">
                 <ul>
-                  {formFields.map((field: "name" | "lastName" | "email" | "password" | "confirmPassword") => {
-                    return (
-                      <li key={field} className="text-red-500">{"• " + errors[field]?.message}</li>
-                    )
-                  })}
+                  {formFields.map(
+                    (
+                      field:
+                        | "name"
+                        | "lastName"
+                        | "email"
+                        | "password"
+                        | "confirmPassword"
+                    ) => {
+                      return (
+                        <li key={field} className="text-red-500">
+                          {"• " + errors[field]?.message}
+                        </li>
+                      );
+                    }
+                  )}
                 </ul>
               </div>
             </div>
-            <Button className="mt-3 w-1/2" variant="secondary" type="submit">
-              CREATE ACCOUNT
-            </Button>
+            {isLoading ? (
+              <ButtonLoading className="mt-3 w-1/2" />
+            ) : (
+              <Button className="mt-3 w-1/2" variant="secondary" type="submit">
+                Create Account
+              </Button>
+            )}
+
             <p className="mt-3 text-slate-500">
               Already has an account?{" "}
               <Link
