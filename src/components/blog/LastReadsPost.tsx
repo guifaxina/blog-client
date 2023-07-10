@@ -1,14 +1,19 @@
 import Image from "next/image";
-import { CiCalendar as Calendar } from "react-icons/ci"
+import { CiCalendar as Calendar } from "react-icons/ci";
 
 type LastReadsProps = {
-  title: string,
-  thumbnail: string,
-  altText: string,
-  date: Date
-}
+  title: string;
+  thumbnail: string;
+  altText: string;
+  date: Date;
+};
 
-export function LastReadsPost({ title, thumbnail, altText, date }: LastReadsProps) {
+export function LastReadsPost({
+  title,
+  thumbnail,
+  altText,
+  date,
+}: LastReadsProps) {
   return (
     <>
       <div className="flex flex-row mt-2">
@@ -16,7 +21,7 @@ export function LastReadsPost({ title, thumbnail, altText, date }: LastReadsProp
           <h3 className="mt-1.5 text-zinc-800 font-semibold ">
             Why Poco M5S Can Be Dangerous to Manufactures
           </h3>
-          
+
           <span className="text-xs mt-0.5 text-zinc-400 flex flex-row items-center">
             <Calendar />
             <span className="ml-1">11 de abril de 2023</span>
