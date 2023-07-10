@@ -34,9 +34,9 @@ export function BlogPost({
         </Link>
         <div className="ml-2">
           <Link href={`/${tag}`}>
-          <span className="text-xs bg-zinc-200 rounded-md p-0.5 px-1 text-zinc-800 hover:bg-zinc-300">
-            {tag}
-          </span>
+            <span className="text-xs bg-zinc-200 rounded-md p-0.5 px-1 text-zinc-800 hover:bg-zinc-300">
+              {tag}
+            </span>
           </Link>
           <span className="text-xs text-zinc-700 ml-1">
             {estimatedReadTime == 1
@@ -44,9 +44,13 @@ export function BlogPost({
               : "• " + estimatedReadTime + " minutes"}
           </span>
           <Link href={`/blog/${linkToPost}`}>
-            <h3 className="text-xl font-semibold mt-1 hover:text-zinc-800">{title}</h3>
+            <h3 className="text-xl font-semibold mt-1 hover:text-zinc-800">
+              {title}
+            </h3>
           </Link>
-          <span className="text-zinc-800 text-sm hover:text-zinc-600">{author}</span>
+          <span className="text-zinc-800 text-sm hover:text-zinc-600">
+            {author}
+          </span>
         </div>
       </div>
     </>
