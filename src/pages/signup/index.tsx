@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FormInput } from "@/components/signup";
-import { useForm } from "react-hook-form";
+import { FieldErrors, FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useCreateAuthor from "@/hooks/useCreateAuthor";
 import { Button } from "@/components/ui/button";
+import PasswordInputField from "@/components/signup/PasswordInputField";
+import { Input } from "@/components/ui/input";
 
 export default function SignUp() {
   const userFormSchema = z
@@ -41,7 +42,7 @@ export default function SignUp() {
 
       confirmPassword: z
         .string()
-        .nonempty("Please fill in your password again."),
+        .nonempty("Please confirm your password."),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: "Passwords do not match.",
@@ -64,23 +65,17 @@ export default function SignUp() {
     await createAuthor({ variables: { type: userData } });
   }
 
-  type InputProps = {
-    type: string;
+  type TPasswordInputFields = {
     name: "name" | "lastName" | "email" | "password" | "confirmPassword";
     placeholder: string;
   }[];
 
-  const inputs: InputProps = [
-    { type: "text", placeholder: "Name", name: "name" },
-    { type: "text", placeholder: "Last name", name: "lastName" },
-    { type: "email", placeholder: "Email", name: "email" },
-    { type: "password", placeholder: "Password", name: "password" },
-    {
-      type: "password",
-      placeholder: "Confirm password",
-      name: "confirmPassword",
-    },
+  const passwordInputFields: TPasswordInputFields = [
+    { name: "password", placeholder: "Password" },
+    { name: "confirmPassword", placeholder: "Confirm your password" },
   ];
+
+  const formFields: FieldValues = Object.keys(errors)
 
   return (
     <>
@@ -104,39 +99,92 @@ export default function SignUp() {
             <h1 className="text-3xl font-semibold text-zinc-50">
               Create an account
             </h1>
-            <p className="text-slate-500 mb-3">Enter your information below to create your account</p>
-            <div className="flex flex-col gap-3 w-full items-center justify-center">
-              <div className="flex flex-row gap-3 w-1/2">
-                {inputs.map(({ type, placeholder, name }, index) => {
-                  return index < 2 ? (
-                    <FormInput
-                      key={name}
-                      type={type}
-                      placeholder={placeholder}
-                      register={register(name)}
-                      errors={errors[name]?.message}
+            <p className="text-slate-500 mb-3">
+              Enter your information below to create your account
+            </p>
+            <div className="flex flex-col gap-3 w-1/2 items-center justify-center">
+              <div className="flex flex-row gap-3 w-full">
+                  {errors.name?.message ? (
+                    <Input
+                      className="bg-slate-950 outline outline-red-500 outline-1 focus-visible:outline-red-500"
+                      placeholder="Name"
+                      {...register("name")}
+                      type="text"
                     />
-                  ) : null;
-                })}
-              </div>
-              {inputs.map(({ type, placeholder, name }, index) => {
-                return index > 1 ? (
-                  <FormInput
-                    key={name}
-                    type={type}
-                    placeholder={placeholder}
-                    register={register(name)}
-                    errors={errors[name]?.message}
+                  ) : (
+                    <Input
+                      className="bg-slate-950 focus-visible:outline-none"
+                      placeholder="Name"
+                      {...register("name")}
+                      type="text"
+                    />
+                  )}
+                {errors.lastName?.message ? (
+                  <Input
+                    className="bg-slate-950 outline outline-red-500 outline-1 focus-visible:outline-red-500"
+                    placeholder="Last name"
+                    {...register("lastName")}
+                    type="text"
                   />
-                ) : null;
-              })}
+                ) : (
+                  <Input
+                    className="bg-slate-950 focus-visible:outline-none"
+                    placeholder="Last name"
+                    {...register("lastName")}
+                    type="text"
+                  />
+                )}
+              </div>
+             
+              {errors.email?.message ? (
+                <Input
+                  className="bg-slate-950 outline outline-red-500 outline-1 focus-visible:outline-red-500"
+                  {...register("email")}
+                  placeholder="Email"
+                  type="email"
+                />
+              ) : (
+                <Input
+                  className="bg-slate-950 focus-visible:outline-none"
+                  {...register("email")}
+                  placeholder="Email"
+                  type="email"
+                />
+              )}
+
+              <div className="flex relative items-center justify-center w-full">
+                <div className="flex flex-col gap-3 w-full">
+                  {passwordInputFields.map(({ name, placeholder }) => {
+                    return (
+                      <PasswordInputField
+                        key={name}
+                        placeholder={placeholder}
+                        register={register(name)}
+                        errors={errors[name]?.message}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="flex flex-col justify-start w-full">
+                <ul>
+                  {formFields.map((field: "name" | "lastName" | "email" | "password" | "confirmPassword") => {
+                    return (
+                      <li key={field} className="text-red-500">{"• " + errors[field]?.message}</li>
+                    )
+                  })}
+                </ul>
+              </div>
             </div>
             <Button className="mt-3 w-1/2" variant="secondary" type="submit">
               CREATE ACCOUNT
             </Button>
             <p className="mt-3 text-slate-500">
               Already has an account?{" "}
-              <Link href={"/login"} className="text-slate-200 font-medium hover:underline">
+              <Link
+                href={"/login"}
+                className="text-slate-200 font-medium hover:underline"
+              >
                 Sign in.
               </Link>
             </p>
