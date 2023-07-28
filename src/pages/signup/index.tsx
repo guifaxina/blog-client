@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { PasswordInputField } from "@/components/signup/";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import ButtonLoading from "@/components/signup/ButtonLoading";
+import { ButtonLoading } from "@/components/signup/ButtonLoading";
+import { useRouter } from "next/router";
 
 export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false);
@@ -59,14 +60,21 @@ export default function SignUp() {
     handleSubmit,
   } = useForm<userFormSchema>({ resolver: zodResolver(userFormSchema) });
 
-  const { createAuthor, loading } = useCreateAuthor();
+  const { error, createAuthor, loading } = useCreateAuthor();
 
-  async function createUser(userFormData: userFormSchema) {
+  const router = useRouter();
+
+  async function createUser(userFormData: userFormSchema): Promise<void> {
     const { confirmPassword, ...userData } = userFormData;
 
-    setIsLoading(true);
-    await createAuthor({ variables: { type: userData } });
-    setIsLoading(loading);
+    try {
+      setIsLoading(true);
+      await createAuthor({ variables: { type: userData } });
+      setIsLoading(loading);
+      router.push("/");
+    } catch (err) {
+      console.log(error);
+    }
   }
 
   type TPasswordInputFields = {
