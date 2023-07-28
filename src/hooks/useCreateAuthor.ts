@@ -8,7 +8,7 @@ export default function useCreateAuthor() {
       }
     }
   `;
-  const [createAuthor, { data, loading, error }] = useMutation(CREATE_AUTHOR);
+  const [createAuthor, { loading, error }] = useMutation(CREATE_AUTHOR);
 
-  return { createAuthor, data, loading, error };
+  return { createAuthor, loading, error };
 }
