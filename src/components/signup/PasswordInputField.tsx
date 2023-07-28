@@ -9,7 +9,7 @@ type Props = {
   errors?: string;
 };
 
-export default function PasswordInputField({
+export function PasswordInputField({
   placeholder,
   register,
   errors,
