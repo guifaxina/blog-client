@@ -1,8 +1,13 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
+
+const link = createHttpLink({
+  uri: process.env.NEXT_PUBLIC_API_ENDPOINT,
+  credentials: 'include'
+})
 
 const client = new ApolloClient({
-  uri: process.env.NEXT_PUBLIC_API_ENDPOINT,
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  link
 })
 
 export default client
