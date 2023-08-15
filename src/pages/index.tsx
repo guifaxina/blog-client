@@ -1,16 +1,19 @@
-import { Inter } from "next/font/google";
 import { Post, Header, LastReads, MainPost } from "@/components/blog";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
-
-const inter = Inter({ subsets: ["latin"] });
+import useGetAuthor from "@/hooks/useGetAuthor";
 
 export default function Home() {
+  const { data } = useGetAuthor();
+
   return (
     <main className="bg-zinc-50 h-screen flex flex-col">
       <header className="bg-zinc-50 w-full border border-b-1 p-2 flex justify-around">
-        <Header />
+        <Header
+          name={data?.getAuthor?.name}
+          profilePic={data?.getAuthor?.profilePic}
+        />
       </header>
 
       <div className="flex gap-16 justify-center">
