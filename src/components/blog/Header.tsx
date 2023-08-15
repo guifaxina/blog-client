@@ -1,6 +1,16 @@
 import Link from "next/link";
+import { UserCircle2 } from "lucide-react";
+import { ProfileDropdown } from "../blog/index"
+import { useState } from "react";
 
-export function Header() {
+interface Props {
+  name?: string;
+  profilePic?: string;
+}
+
+export function Header({ name, profilePic }: Props) {
+  const [ isDropDownActive, setIsDropdownActive ] = useState(false)
+
   return (
     <>
       <div>Logo</div>
@@ -40,11 +50,20 @@ export function Header() {
         </li>
       </ul>
 
+      {isDropDownActive && <ProfileDropdown name={name} profilePic={profilePic}/>}
+
       <div className="flex gap-4">
-        <button>Login</button>
-        <Link href="/signup">
-          <button>SignUp</button>
-        </Link>
+        {name ? (
+          <div className="flex flex-row gap-2 cursor-pointer" onClick={() => {
+            isDropDownActive ? setIsDropdownActive(false) : setIsDropdownActive(true)
+          }}>
+            <UserCircle2 strokeWidth={1} size={26} />
+          </div>
+        ) : (
+          <Link href="/signup">
+            <button>SignUp</button>
+          </Link>
+        )}
       </div>
     </>
   );
